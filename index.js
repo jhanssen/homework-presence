@@ -2,6 +2,7 @@
 
 "use strict";
 
+
 let timeout;
 module.exports = {
     get name() { return "presence"; },
@@ -12,12 +13,13 @@ module.exports = {
             return false;
         }
 
+        var ping = require('ping');
 
         if (!cfg.frequency)
             cfg.frequency = 300000; // 5 minutes
 
-        let dev = new homework.Device(homework.Device.Type.Presence);
-        let val = new homework.Device.Value("Presence");
+        let dev = {addValue: function() {}}; //new homework.Device(homework.Device.Type.Presence);
+        let val = {update: function() {}}; //new homework.Device.Value("Presence");
         val._valueType = "boolean";
         val.update(true);
         dev.addValue(val);
@@ -26,16 +28,18 @@ module.exports = {
         let failures = 0;
         function ping()
         {
-            const pingSession = require("net-ping").createSession(cfg); // allow overriding all of the
+            //Only promise wrapper supports configable ping options
+            // const pingSession = require("net-ping").createSession(cfg); // allow overriding all of the
             let found = 0, notFound = 0;
-            cfg.devices.forEach(function(address) {
-                console.log("pinging host " + address);
-                pingSession.pingHost(address, function(error, target) {
-                    console.log("GOT RESPONSE " + error + " " + target);
-                    if (error) {
-                        ++notFound;
-                    } else {
+            cfg.devices.forEach(function(host) {
+
+                console.log("pinging host " + host);
+                ping.promise.probe(host, cfg).then(function(result) {
+                    console.log("GOT RESPONSE " + host);
+                    if (result) {
                         ++found;
+                    } else {
+                        ++notFound;
                     }
                     if (found + notFound == cfg.devices.length) {
                         if (!found) {
@@ -55,8 +59,8 @@ module.exports = {
                 });
             });
         }
-        homework.utils.onify(this);
-        this._initOns();
+        // homework.utils.onify(this);
+        // this._initOns();
         timeout = setTimeout(ping, 5000);
         return true;
     },
@@ -69,4 +73,4 @@ module.exports = {
     }
 };
 
-module.exports.init({ devices: ["192.168.1.2"], frequency: 5000 });
+module.exports.init({ devices: ["192.168.1.2"], frequency: 5000 }, {}, {addDevice: function() {}});
