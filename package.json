@@ -1,0 +1,19 @@
+{
+  "name": "hw-presence",
+  "version": "1.0.0",
+  "engines": {
+    "hw-server": ">=1.0.0",
+    "node": ">4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhanssen/hw-presence"
+  },
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "homework-plugin"
+  ],
+  "dependencies": {
+    "net-ping": "^1.2.0"
+  }
+}
