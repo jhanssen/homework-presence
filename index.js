@@ -1,9 +1,8 @@
-/*global require, module, setTimeout, setInterval*/
+/*global require, module, setTimeout, setInterval, clearTimeout*/
 
 "use strict";
 
-var interval;
-
+let timeout;
 module.exports = {
     get name() { return "presence"; },
     get ready() { return true; },
@@ -45,17 +44,21 @@ module.exports = {
                         } else {
                             failures = 0;
                         }
-                        setTimeout(ping, cfg.frequency);
+                        timeout = setTimeout(ping, cfg.frequency);
                     }
                 });
             });
         }
         homework.utils.onify(this);
         this._initOns();
-        setTimeout(ping, 5000);
+        timeout = setTimeout(ping, 5000);
         return true;
     },
     shutdown: function(cb) {
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = undefined;
+        }
         cb();
     }
 };
