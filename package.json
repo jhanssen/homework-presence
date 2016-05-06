@@ -14,7 +14,6 @@
     "homework-plugin"
   ],
   "dependencies": {
-    "net-ping": "^1.2.0",
     "ping": "^0.1.10"
   }
 }
