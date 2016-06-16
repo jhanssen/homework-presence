@@ -16,7 +16,7 @@ module.exports = {
         if (!cfg.frequency)
             cfg.frequency = 300000; // 5 minutes
 
-        let dev = new homework.Device(homework.Device.Type.Presence);
+        let dev = new homework.Device("Presence");
         let val = new homework.Device.Value("Presence");
         val._valueType = "boolean";
         dev.addValue(val);
